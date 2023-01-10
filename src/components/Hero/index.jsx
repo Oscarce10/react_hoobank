@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../style';
 import './styles.css';
-import { discount, robot } from '../../assets/images';
+import { discount, robot } from '@images';
 import GetStarted from '../GetStarted';
 
 const Hero = () => (

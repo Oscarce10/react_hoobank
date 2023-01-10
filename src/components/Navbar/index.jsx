@@ -4,7 +4,7 @@ import {
     close,
     menu,
     logo,
-} from '../../assets/images/index';
+} from '@images';
 import { navLinks } from '../../constants/index';
 
 const Navbar = () => {
