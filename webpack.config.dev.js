@@ -1,8 +1,9 @@
 const path = require('path');
-const htmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+
 const options = {
     extensions: ['js', 'jsx'],
     exclude: [
@@ -15,16 +16,19 @@ module.exports = {
     entry: './src/index.jsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
     },
     resolve: {
-        extensions: ['.js', '.jsx']
+        extensions: ['.js', '.jsx'],
+        alias: {
+            '@images': path.resolve(__dirname, 'src/assets/images'),
+        },
     },
     plugins: [
-        new htmlWebpackPlugin({
+        new HtmlWebpackPlugin({
             inject: true,
             template: './public/index.html',
-            filename: "./index.html"
+            filename: './index.html',
         }),
         new MiniCssExtractPlugin(),
         new ESLintPlugin(),
@@ -33,8 +37,8 @@ module.exports = {
             // ./dist directory is being served
             host: 'localhost',
             port: 3000,
-            server: { baseDir: ['dist'] }
-        })
+            server: { baseDir: ['dist'] },
+        }),
     ],
     module: {
         rules: [
@@ -43,16 +47,7 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                }
-            },
-            // HTML plugin
-            {
-                test: /\.(png|jpg|gif|svg)$/,
-                use: [
-                    {
-                        loader: 'html-loader',
-                    }
-                ]
+                },
             },
             // CSS/SASS plugin
             {
@@ -60,10 +55,18 @@ module.exports = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
-                    'sass-loader'
-                ]
-            }
-
-        ]
-    }
-}
+                    'sass-loader',
+                    'postcss-loader',
+                ],
+            },
+            // images
+            {
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                type: 'asset',
+                generator: {
+                    filename: 'assets/images/[name][ext]',
+                },
+            },
+        ],
+    },
+};
